@@ -1,7 +1,9 @@
 .clickable {
   color: blue;
+  font-size: 18px;
 }
 
 .clickable:hover {
   cursor: pointer;
+  text-decoration: underline;
 }

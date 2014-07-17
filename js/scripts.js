@@ -4,19 +4,25 @@ var Purchase = {
   }
 }
 
-var Category = {};
+var Category = {
+  initialize: function(name) {
+    this.purchases = [];
+    this.name = name;
+  }
+};
 
 $(document).ready(function(){
   var currentCategory;
   $("form#category").submit(function(event){
-
     event.preventDefault();
     var inputtedCategory = $("input#category-input").val();
     var newCategory = Object.create(Category)
     newCategory.name = inputtedCategory
-    newCategory.purchases = [];
+    newCategory.initialize()
+    console.log(newCategory);
 
-    $("#category-list").append("<li class='clickable category-item'>"+inputtedCategory+"</li>");
+    $("#category-list").append("<li class='clickable category-item'>"
+      +inputtedCategory+"</li>");
     $("input#category-input").val("");
     $(".category-item").last().click(function(){
       currentCategory = newCategory;
@@ -24,11 +30,17 @@ $(document).ready(function(){
       //add all purchases from currentCategory.purchases
       // var categoryTitle = $(this).text();
       $("#category-title").empty().append(currentCategory.name);
+      $("table#purchases").empty();
 
+      currentCategory.purchases.forEach(function(purchase) {
+      $("table#purchases").append("<tr><td>" + purchase.describe + "</td><td>$ "
+                                + purchase.amount + "</td><td>" + purchase.quantity
+                                + "</td><td>$ " + purchase.totalCost() +"</td></tr>");
+      });
     });
   });
-
   $("form#expenses").submit(function(event){
+    event.preventDefault();
     var inputtedDescription = $("input#description").val();
     var inputtedAmount = parseInt($("input#amount").val());
     var inputtedQuantity = parseInt($("input#quantity").val());
@@ -37,10 +49,14 @@ $(document).ready(function(){
     newPurchase.amount = inputtedAmount;
     newPurchase.quantity = inputtedQuantity;
     currentCategory.purchases.push(newPurchase);
-    $("table#purchases").append("<tr><td>" + newPurchase.describe + "</td><td>$ "
-                                + newPurchase.amount + "</td><td>" + newPurchase.quantity
-                                + "</td><td>$ " + newPurchase.totalCost() +"</td></tr>");
-    event.preventDefault();
+
+    $("table#purchases").empty();
+    currentCategory.purchases.forEach(function(purchase) {
+      $("table#purchases").append("<tr><td>" + purchase.describe + "</td><td>$ "
+                                + purchase.amount + "</td><td>" + purchase.quantity
+                                + "</td><td>$ " + purchase.totalCost() +"</td></tr>");
+    });
+
   });
 
 
