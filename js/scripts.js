@@ -4,12 +4,28 @@ var Purchase = {
   }
 }
 
-$(document).ready(function(){
+var Category = {};
 
-  $("#add-button").click(function(){
+$(document).ready(function(){
+  var currentCategory;
+  $("form#category").submit(function(event){
+
+    event.preventDefault();
     var inputtedCategory = $("input#category-input").val();
-    $("#category-list").append("<li>"+inputtedCategory+"</li>");
+    var newCategory = Object.create(Category)
+    newCategory.name = inputtedCategory
+    newCategory.purchases = [];
+
+    $("#category-list").append("<li class='clickable category-item'>"+inputtedCategory+"</li>");
     $("input#category-input").val("");
+    $(".category-item").last().click(function(){
+      currentCategory = newCategory;
+      //empty all purchases
+      //add all purchases from currentCategory.purchases
+      // var categoryTitle = $(this).text();
+      $("#category-title").empty().append(currentCategory.name);
+
+    });
   });
 
   $("form#expenses").submit(function(event){
@@ -20,14 +36,14 @@ $(document).ready(function(){
     newPurchase.describe = inputtedDescription;
     newPurchase.amount = inputtedAmount;
     newPurchase.quantity = inputtedQuantity;
-
+    currentCategory.purchases.push(newPurchase);
     $("table#purchases").append("<tr><td>" + newPurchase.describe + "</td><td>$ "
                                 + newPurchase.amount + "</td><td>" + newPurchase.quantity
                                 + "</td><td>$ " + newPurchase.totalCost() +"</td></tr>");
     event.preventDefault();
   });
 
-  $("li").click(function(){
-    alert($(this).index());
-  });
+
+
+
 });
